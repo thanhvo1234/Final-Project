@@ -11,5 +11,5 @@ export const getUserAPI = (params) =>
 
 export const registerUserAPI = (params) => {
   console.log("Request Payload:", params);
-  return axios.post(`${API_URL.USER}`, params);
+  return axios.post(`${API_URL.USER}/register`, params);
 };
