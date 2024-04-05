@@ -1,5 +1,6 @@
 import React from 'react'
 import "./Product.css"
+import { Link } from 'react-router-dom';
 
 const Product = (props) => {
   // Định dạng giá cả
@@ -12,7 +13,7 @@ const Product = (props) => {
 
   return (
     <div className='product'>
-        <img src={props.image || 'placeholder-image-url'} alt={props.name} />
+        <Link to={`/product/${props.id}`}><img onClick={window.scrollTo(0,0)} src={props.image || 'placeholder-image-url'} alt={props.name} /></Link>
         <p>{props.name}</p>
         <div className="product-prices">
             <div className="product-price-new">

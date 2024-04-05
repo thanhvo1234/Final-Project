@@ -23,6 +23,10 @@ const routes = [
         element: <div>404</div>,
       },
       {
+        path: "/product/:productId", // Sử dụng :productId là phần động của đường dẫn
+        element: <Product />
+      },
+      {
         path:"/mens",
         element: <ShopCategory banner={men_banner} category="men"/>
       },
@@ -33,6 +37,10 @@ const routes = [
       {
         path:"/kids",
         element: <ShopCategory banner={kid_banner}  category="kid"/>
+      },
+      {
+        path:"/cart",
+        element: <Cart />
       },
       
     ],
