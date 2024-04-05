@@ -1,5 +1,8 @@
 .product{
-    width: 350px;
+    width: 280px;
+}
+.product img{
+    width: 280px;
 }
 .product p{
     margin: 6px 0px;
@@ -22,4 +25,37 @@
 .product:hover{
     transform: scale(1.05);
     transition: 0.6s;
+}
+@media(max-width:1280px){
+    .product{
+        width: 220px;
+        font-size: 14px;
+    }
+    .product img{
+        width: 220px;
+    }
+    .product-price-old{
+        font-size: 14px;
+    }
+}
+@media(max-width:800px){
+    .product{
+        width: 120px;
+        font-size: 12px;
+    }
+    .product img{
+        width: 120px;
+    }
+    .product-price-old{
+        font-size: 12px;
+    }
+}
+@media (max-width:500px) {
+    .product{
+        width: 160px;
+    }
+    .product img{
+        width: 160px;
+    }
+    
 }
