@@ -24,7 +24,7 @@
     padding-left: 70px;
   }
   #login-form p.form-title {
-    color: #333333;
+    color: #222831;
     font-family: "Josefin Sans", sans-serif;
     font-size: 45px;
     font-weight: 500;
@@ -52,7 +52,12 @@
   .login-form-button {
     width: 100%;
     font-size: 22px;
-    padding-bottom: 43px;
+    padding-bottom: 45px;
+    border: 1px solid #31363F;
+    outline: none;
+    background: #76ABAE;
+    font-size: 24px;
+
   }
   .image {
     display: flex;
@@ -69,4 +74,5 @@
   }
   .custom-input {
     height: 50px;
+    border: 1px solid #31363F;
 }

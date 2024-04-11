@@ -107,7 +107,7 @@ const Login = () => {
                 message: "Please input your password!",
               },
             ]}>
-            <Input.Password placeholder="Enter your Password" />
+            <Input.Password className="custom-input" placeholder="Enter your Password" />
           </Form.Item>
           <Form.Item>
             <Button

@@ -26,11 +26,11 @@
 }
 
 .nav-link {
-    color: #31363F; /* Cập nhật màu sắc */
+    color: #31363F;
 }
 
 .nav-link:hover {
-    color: #76ABAE; /* Màu sắc khi hover */
+    color: #76ABAE;
 }
 
 .nav-menu li{
@@ -56,13 +56,13 @@
 .nav-login-cart button{
     outline: none;
     color: white;
-    background-color: #31363F; /* Tương đương với bg-green-700 */
+    background-color: #31363F;
     transition: background-color 0.2s ease-in-out;
-    font-weight: 600; /* Tương đương với font-medium */
-    border-radius: 3rem; /* Tương đương với rounded-lg */
-    font-size: 0.875rem; /* Tương đương với text-sm */
-    padding: 0.625rem 1.25rem; /* Tương đương với px-5 py-2.5 */
-    margin-bottom: 0.5rem; /* Tương đương với mb-2 */
+    font-weight: 600;
+    border-radius: 3rem;
+    font-size: 0.875rem;
+    padding: 0.625rem 1.25rem;
+    margin-bottom: 0.5rem;
 }
 .nav-cart-count{
     width: 22px;
