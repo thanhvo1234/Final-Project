@@ -4,6 +4,9 @@ import { UserModule } from './module/user/user.module';
 import { ProductModule } from './module/product/product.module';
 import { BrandModule } from './module/brand/brand.module';
 import { CategoryModule } from './module/category/category.module';
+import { AppController } from './app.controller';
+import { AppService } from './app.service';
+import { Module } from '@nestjs/common';
 
 @Module({
   imports: [
@@ -17,3 +20,4 @@ import { CategoryModule } from './module/category/category.module';
   controllers: [AppController],
   providers: [AppService],
 })
+export class AppModule {}
