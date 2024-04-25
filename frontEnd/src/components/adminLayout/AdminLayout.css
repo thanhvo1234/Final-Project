@@ -1,0 +1,19 @@
+* {
+    margin: 0;
+    padding: 0;
+  }
+  .ant-layout {
+    background: #dcdcdc;
+    height: 100vh;
+    overflow: hidden;
+  }
+  .content {
+    display: flex;
+    justify-content: center;
+    background: #f9f9f9;
+    margin-bottom: 16px;
+  }
+  .outlet-layout {
+    width: 100%;
+    height: auto;
+  }

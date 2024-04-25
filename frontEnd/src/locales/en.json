@@ -1,0 +1,40 @@
+{
+    "LANGUAGE": "Language",
+    "VIETNAMESE": "Vietnamese",
+    "ENGLISH": "English",
+    "SIDEBAR": {
+      "DASHBOARD": "Dashboard",
+      "USERS": "Users",
+      "PRODUCTS": "Products",
+      "LOGOUT": "Logout",
+      "LOGOUTCONTENT": "Are you sure you want to logout?"
+    },
+    "USER": {
+      "PROFILE": "Personal Information",
+      "AVATAR": "Avatar",
+      "ROLE": "Role",
+      "NAME": "Name",
+      "ADDRESS": "Address",
+      "EMAIL": "Email",
+      "PHONE": "Phone"
+    },
+    "PRODUCT": {
+      "NAME": "Product Name",
+      "IMAGE": "Image Product",
+      "PRICE": "Price",
+      "QUANTITY": "Quantity",
+      "CATEGORY": "Category",
+      "BRAND": "Brand",
+      "ONSALE": "On Sale",
+      "COUPOUN": "Coupoun"
+    },
+    "EDIT": "Change",
+    "DELETE": "Delete",
+    "CLOSE": "Ok",
+    "VIEW": "View",
+    "BACK": "Back",
+    "SAVE": "Save",
+    "CANCEL": "Cancel",
+    "OK": "Submit",
+    "SUBMIT": "Submit"
+  }

@@ -24,16 +24,16 @@ const Login = () => {
     setShowAlert(true);
 
     const user = {
-      fullName: userData.userData.fullName || null,
-      phoneNumber: userData.userData.phoneNumber || null,
-      email: userData.userData.email,
-      address: userData.userData.address || null
+      fullName: userData.fullName || null,
+      phoneNumber: userData.phoneNumber || null,
+      email: userData.email,
+      address: userData.address || null
     };
     console.log(user,"aaa");
     console.log(userData,"bbb");
     localStorage.setItem("user", JSON.stringify(user));
     localStorage.setItem("authenticated", "true");
-    navigate("/");
+    navigate("/manageUsers");
   };
 
   const handleFailedLogin = () => {

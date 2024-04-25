@@ -1,0 +1,44 @@
+{
+    "LANGUAGE": "Ngôn Ngữ",
+    "VIETNAMESE": "Tiếng Việt",
+    "ENGLISH": "Tiếng Anh",
+    "SIDEBAR": {
+      "DASHBOARD": "Bảng thống kê",
+      "USER": "Người Dùng",
+      "PRODUCT": "Dự Án",
+      "LOGOUT": "Đăng Xuất",
+      "LOGOUTCONTENT": "Bạn có muốn đăng xuất không?"
+    },
+    "USER": {
+      "PROFILE": "Thông tin cá nhân",
+      "STAFF": "Thông tin nhân viên",
+      "AVATAR": "Ảnh đại diện",
+      "ROLE": "Chức năng",
+      "NAME": "Họ và Tên",
+      "ADDRESS": "Địa chỉ",
+      "EMAIL": "Email",
+      "CREATE": "Tạo mới",
+      "PHONE": "Số điện thoại",
+      "CREATAT": "Ngày tạo"
+    },
+    "PRODUCT": {
+      "NAME": "Tên dự án",
+      "IMAGE": "Hình ảnh",
+      "PRICE": "Đơn giá",
+      "QUANTITY": "Số lượng",
+      "CATEGORY": "Thể loại",
+      "BRAND": "Thương hiệu",
+      "ONSALE": "Giảm giá",
+      "COUPOUN": "% Giảm giá",
+      "MANAGER": "Quản lý dự án"
+    },
+    "EDIT": "Thay Đổi",
+    "DELETE": "Xóa",
+    "CLOSE": "Đóng",
+    "VIEW": "Xem",
+    "BACK": "Quay lại",
+    "SAVE": "Lưu",
+    "CANCEL": "Hủy Bỏ",
+    "OK": "Lưu",
+    "SUBMIT": "Tạo mới"
+  }

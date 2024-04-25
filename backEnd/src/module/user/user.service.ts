@@ -10,7 +10,6 @@ import { ResponsePaginate } from 'src/common/dtos/responsePaginate';
 import { PageMetaDto } from 'src/common/dtos/pageMeta';
 import { ManageUserDto } from './dto/manageUser.dto';
 import { Cart } from 'src/entities/cart.entity';
-
 @Injectable()
 export class UserService {
   constructor(
@@ -29,17 +28,15 @@ export class UserService {
         HttpStatus.BAD_REQUEST,
       );
     }
-
+  
     // Tạo một người dùng mới và lưu vào cơ sở dữ liệu
     const user = new User(userData);
     user.password = password;
     user.role = RoleEnum.CUSTOMER;
     await this.entityManager.save(user);
-
     const cart = new Cart();
     cart.user = user;
     await this.entityManager.save(cart);
-
     user.cartId = cart.id;
     await this.entityManager.save(user);
     const userDataWithoutCart = { ...user, cart: undefined };
@@ -47,7 +44,6 @@ export class UserService {
   }
   async login(email: string, password: string) {
     const user = await this.usersRepository.findOne({ where: { email } });
-
     if (!user) {
       throw new HttpException('User not found', HttpStatus.UNAUTHORIZED);
     }
@@ -58,8 +54,14 @@ export class UserService {
     const { password: _, ...userData } = user;
     return userData;
   }
+
   async getUsers(params: ManageUserDto) {
     const users = this.usersRepository.createQueryBuilder('user');
+    if (params.searchByName) {
+      users.andWhere('user.fullName ILIKE :fullName', {
+        fullName: `%${params.searchByName}%`,
+      });
+    }
     const [result, total] = await users.getManyAndCount();
     const pageMetaDto = new PageMetaDto({
       itemCount: total,
@@ -76,8 +78,8 @@ export class UserService {
       .createQueryBuilder('user')
       .where('user.id = :id', { id })
       .leftJoinAndSelect('user.cart', 'cart')
+      .leftJoinAndSelect('user.orders', 'order')
       .getOne();
-
     if (!user) {
       throw new HttpException('User not found', HttpStatus.NOT_FOUND);
     }

@@ -1,8 +1,8 @@
 import { PageOptionsDto } from 'src/common/dtos/pageOption';
 import { Brand } from 'src/entities/brands.entity';
 import { Category } from 'src/entities/categories.entity';
-
 export class getProductDto extends PageOptionsDto {
+    
   nameProduct: string;
 
   description: string;
@@ -12,6 +12,8 @@ export class getProductDto extends PageOptionsDto {
   brand: Brand;
 
   price: number;
+
+  coupoun: number;
 
   quantity: number;
 

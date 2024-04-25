@@ -8,7 +8,6 @@ import { getProductDto } from './dto/getProduct.dto';
 import { ResponsePaginate } from 'src/common/dtos/responsePaginate';
 import { PageMetaDto } from 'src/common/dtos/pageMeta';
 import { randomBytes } from 'crypto';
-
 @Injectable()
 export class ProductService {
   constructor(
@@ -16,7 +15,6 @@ export class ProductService {
     private productRespository: Repository<Product>,
     private readonly entityManager: EntityManager,
   ) {}
-
   generateSkuFromName(name: string): string {
     const formattedName = name
       .normalize('NFD')
@@ -25,7 +23,6 @@ export class ProductService {
     const sku = formattedName.replace(/\s+/g, '-');
     const uniqueIdentifier = randomBytes(4).toString('hex');
     const uniqueSku = `${sku}-${uniqueIdentifier}`;
-
     return uniqueSku;
   }
   async createProduct(createProductDto: CreateProductDto): Promise<Product> {
@@ -43,13 +40,35 @@ export class ProductService {
         product.sku = sku;
         product.image = image;
         product.onSale = false;
-
         const savedProduct = await this.entityManager.save(product);
         resolve(savedProduct);
       } catch (error) {
         reject(error);
       }
     });
+  }
+  async getProductBySkuBrand(skuBrand: string): Promise<Product[]> {
+    try {
+      const products = await this.productRespository.find({
+        where: { brand: { skuBrand } },
+        relations: ['brand'],
+      });
+      return products;
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  async getProductBySkuCategory(skuCategory: string): Promise<Product[]> {
+    try {
+      const products = await this.productRespository.find({
+        where: { category: { skuCategory } },
+        relations: ['category'],
+      });
+      return products;
+    } catch (error) {
+      throw error;
+    }
   }
 
   async getProducts(params: getProductDto): Promise<ResponsePaginate<Product>> {
@@ -79,7 +98,6 @@ export class ProductService {
       return Promise.reject(error);
     }
   }
-
   async getProductById(id: string): Promise<Product> {
     try {
       const product = await this.productRespository
@@ -100,7 +118,6 @@ export class ProductService {
       return Promise.reject(error);
     }
   }
-
   async updateProduct(
     id: string,
     updateProductDto: UpdateProductDto,
@@ -119,11 +136,9 @@ export class ProductService {
     product.image = updateProductDto.image;
     product.coupon = updateProductDto.coupon;
     product.sku = this.generateSkuFromName(updateProductDto.nameProduct);
-
     await this.productRespository.save(product);
     return product;
   }
-
   async deleteProduct(id: string): Promise<void> {
     await this.productRespository.softDelete(id);
   }
