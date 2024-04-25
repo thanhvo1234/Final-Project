@@ -1,0 +1,77 @@
+.employee-search {
+    margin-bottom: 10px;
+    display: flex;
+    justify-content: space-between;
+  }
+  
+  @media (max-width: 768px) {
+    .employee-search {
+      flex-direction: column;
+      align-items: start;
+    }
+  }
+  
+  .pagination {
+    bottom: 0;
+    right: 0;
+    margin-top: 10px;
+    display: flex;
+    justify-content: flex-end;
+    align-items: flex-end;
+  }
+  
+  .avatar-container {
+    width: 108px; /* Set the width and height to the desired size */
+    height: 108px;
+    border-radius: 50%; /* Make it a circle */
+    overflow: hidden; /* Hide overflow for perfect circle */
+    position: relative;
+  }
+  
+  .avatar-container img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover; /* Maintain aspect ratio and cover the container */
+  }
+  
+  .custom-upload.ant-upload.ant-upload-select .ant-upload-picture-card-wrapper {
+    width: 10px;
+    height: 12px;
+    margin-inline-end: 8px;
+    margin-bottom: 8px;
+    text-align: center;
+    vertical-align: top;
+    background-color: rgba(0, 0, 0, 0.02);
+    border: 1px dashed #d9d9d9;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: border-color 0.3s;
+  }
+  
+  .custom-upload.ant-upload.ant-upload-select
+    .ant-upload-picture-card-wrapper
+    img {
+    border-radius: 50%;
+    object-fit: cover;
+  }
+  
+  /* width */
+  .skills-table::-webkit-scrollbar {
+    width: 3px;
+    height: 10px;
+  }
+  
+  /* Track */
+  .skills-table::-webkit-scrollbar-track {
+    background: #f1f1f1;
+  }
+  
+  /* Handle */
+  .skills-table::-webkit-scrollbar-thumb {
+    background: #888;
+  }
+  
+  /* Handle on hover */
+  .skills-table::-webkit-scrollbar-thumb:hover {
+    background: #555;
+  }

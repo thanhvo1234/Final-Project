@@ -12,6 +12,10 @@ import Homepage from "../screens/home/homePage";
 import { AdminLayout } from "../components/adminLayout/AdminLayout";
 
 
+import ManageBrand from "../screens/manageBrand/listBrand/ManageBrand";
+import EditBrand from "../screens/manageBrand/editBrand/EditBrand";
+
+
 
 
 const PrivateRoutes = () => {
@@ -37,6 +41,14 @@ const routes = [
       {
         path: "/manageProducts",
         element: <ManageProduct />,
+      },
+
+      {
+        path: "/manageBrands",
+        element: <ManageBrand />,
+      },
+      { path: "/manageBrands/brandDetail/:id",
+      element: <EditBrand />
       },
 
       {

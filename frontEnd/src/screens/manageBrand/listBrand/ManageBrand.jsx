@@ -3,13 +3,13 @@ import { useState } from "react";
 import Pagination from "../../../components/pagination/Pagination";
 import Typography from "antd/es/typography/Typography";
 import { Translation, useTranslation } from "react-i18next";
-import "./ManageProduct.css";
-import ReadProduct from "../ReadProduct";
+import "./ManageBrand.css";
 import { PlusOutlined } from "@ant-design/icons";
-import CreateProduct from "../CreateProduct";
-import { useGetProduct } from "../../../hooks/useProduct";
+import ReadBrand from "../ReadBrand";
+import { useGetFullBrand } from "../../../hooks/useBrand";
+import CreateBrand from "../CreateBrand";
 
-function ManageProduct() {
+function ManageBrand() {
   const { t } = useTranslation();
   const [searchNameText, setSearchNameText] = useState("");
   const [table, setTable] = useState({
@@ -32,10 +32,10 @@ function ManageProduct() {
 
   
   const {
-    data: products,
+    data: brands,
     isLoading,
     isError,
-  } = useGetProduct({ ...paginateOptions, reload });
+  } = useGetFullBrand({ ...paginateOptions, reload });
 
   return (
     <>
@@ -46,7 +46,7 @@ function ManageProduct() {
         >
           <Space className="employee-search" size="large">
             <Input
-              placeholder={t("PRODUCT.NAME")}
+              placeholder={t("BRAND.NAME")}
               value={searchNameText}
               style={{
                 width: 304,
@@ -67,9 +67,9 @@ function ManageProduct() {
             }}
           >
             <PlusOutlined />{" "}
-            <Translation>{(t) => t("PRODUCT.NEW")}</Translation>
+            <Translation>{(t) => t("BRAND.NEW")}</Translation>
           </Button>
-          <CreateProduct
+          <CreateBrand
             isModalOpen={isModalOpen}
             setIsModalOpen={setIsModalOpen}
             width="1000px"
@@ -95,9 +95,9 @@ function ManageProduct() {
         </div>
       ) : (
         <>
-        <ReadProduct data={products} />
+        <ReadBrand data={brands} />
         <div className="pagination">
-          <Pagination items={products} table={table} setTable={setTable} />
+          <Pagination items={brands} table={table} setTable={setTable} />
         </div>
         </>
       )}
@@ -105,4 +105,4 @@ function ManageProduct() {
   );
 }
 
-export default ManageProduct;
+export default ManageBrand;
