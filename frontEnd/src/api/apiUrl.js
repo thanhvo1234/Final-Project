@@ -1,18 +1,34 @@
 import axios from "axios";
 import { API_URL } from "../constants/enum";
 
-  //product
-  export const getProductAPI = (params) =>
-  axios.get(API_URL.PRODUCT, { params });
-
-  export const getProductDetailApi = (productId, params) =>
-  axios.get(`${API_URL.USER}/${productId}`, { params });
-
-  export const getProductDetailApiBySku = (sku, params) =>
-  axios.get(`${API_URL.USER}/${sku}`, { params });
+  export const getUserAPI = (params) =>
+  axios.get(API_URL.USER, { params });
 
   export const getUserDetailApi = (userId, params) =>
   axios.get(`${API_URL.USER}/${userId}`, { params });
+
+  export const updateUserAPI = (userId, params) =>
+  axios.patch(`${API_URL.USER}/${userId}`, params);
+
+
+  export const loginUserAPI = (params) =>{
+  console.log("Request Payload:", params);
+  return axios.post(`${API_URL.USER}/login`, params);
+  };
+
+  //product
+  export const getProductAPI = (params) =>
+  axios.get(API_URL.PRODUCT, { params });
+  export const getProductDetailApi = (productId, params) =>
+  axios.get(`${API_URL.PRODUCT}/${productId}`, { params });
+
+  export const getProductDetailApiBySku = (sku, params) =>
+  axios.get(`${API_URL.PRODUCT}/sku/${sku}`, { params });
+
+  export const registerUserAPI = (params) => {
+  console.log("Request Payload:", params);
+  return axios.post(`${API_URL.USER}/register`, params);
+  };
 
   export const deleteProductAPI = (productId) =>
   axios.delete(`${API_URL.PRODUCT}/${productId}`);
@@ -27,20 +43,6 @@ import { API_URL } from "../constants/enum";
   axios.post(API_URL.PRODUCT, params);
 
 
-
-  //user
-  export const getUserAPI = (params) =>
-  axios.get(API_URL.USER, { params });
-
-  export const loginUserAPI = (params) =>{
-  console.log("Request Payload:", params);
-  return axios.post(`${API_URL.USER}/login`, params);
-  };
-
-  export const registerUserAPI = (params) => {
-  console.log("Request Payload:", params);
-  return axios.post(`${API_URL.USER}/register`, params);
-  };
 
   //category
   export const getCategoryAPI = (params) =>
@@ -74,3 +76,22 @@ import { API_URL } from "../constants/enum";
 
   export const createBrandAPI = (params) =>
   axios.post(API_URL.BRAND, params);
+
+  //cart
+  export const getCartAPI = (params) =>
+  axios.get(API_URL.CART, { params });
+
+  export const getDetailCartAPI = (cartId, params) =>
+  axios.get(`${API_URL.CART}/${cartId}`, { params });
+
+  export const addToCartAPI = (cartId, params) => {
+    return axios.post(`${API_URL.CART}/${cartId}/add`, params);
+  };
+  export const removeCartItemFromCartAPI = (cartItemId) =>
+  axios.delete(`${API_URL.CART}/${cartItemId}`);
+
+  export const increaseProductQuantityAPI = (cartId, cartItemId) =>
+  axios.post(`${API_URL.CART}/${cartId}/increase/${cartItemId}`);
+
+export const decreaseProductQuantityAPI = (cartId, cartItemId) =>
+  axios.post(`${API_URL.CART}/${cartId}/decrease/${cartItemId}`);

@@ -4,6 +4,7 @@ import { ShopContext } from '../../context/ShopContext'
 import dropdown_icon from "../../assets/dropdown_icon.png"
 import Item from "../../components/product/Product"
 import all_product from "../../assets/all_product"
+import CartItems from '../../components/cartItems/CartItems'
 
 
 const ShopCategory = (props) => {
@@ -25,7 +26,7 @@ const ShopCategory = (props) => {
           // Chỉ render sản phẩm nếu chúng thuộc danh mục được chọn
           if (props.category === product.category) {
             return (
-              <Item 
+              <CartItems 
                 key={i} 
                 id={product.id} 
                 name={product.name} 

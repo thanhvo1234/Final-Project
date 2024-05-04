@@ -1,24 +1,24 @@
-import React, {useContext} from 'react'
-import { ShopContext } from '../context/ShopContext'
-import { useParams } from 'react-router-dom'
-import Breadcrum from '../components/breadcrums/Breadcrum';
+/* eslint-disable no-unused-vars */
+import React from 'react';
+import { useParams } from 'react-router-dom';
 import ProductDisplay from '../components/productDisplay/ProductDisplay';
-import DescriptionBox from '../components/desciptionBox/DescriptionBox';
-import RelatedProducts from '../components/relatedProducts/RelatedProducts';
-
+import { useGetOneProductBySku } from '../hooks/useProduct';
 
 const Product = () => {
-  const {all_product} = useContext(ShopContext);
-  const {productId} = useParams();
-  const product = all_product.find((e)=> e.id === Number(productId));
-  return (
-    <div>
-      <Breadcrum product={product}/>
-      <ProductDisplay product={product}/>
-      <DescriptionBox/>
-      <RelatedProducts/>      
-    </div>
-  )
-}
+    const { sku } = useParams();
+    const { data: product, isLoading, isError } = useGetOneProductBySku(sku);
+    console.log(product)
+    
+    if (isLoading) return <div>Loading...</div>;
+    if (isError) return <div>Error fetching product data</div>;
+    
+    if (!product) return null; // Or handle this case as needed
 
-export default Product
+    return (
+        <div>
+            <ProductDisplay product={product} />
+        </div>
+    );
+};
+
+export default Product;

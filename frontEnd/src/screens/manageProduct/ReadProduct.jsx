@@ -11,7 +11,7 @@ const ProductName = ({ nameProduct, record }) => {
   return (
     <Typography.Text
       onClick={() => {
-        navigate(`/manageProducts/employeeDetail/${record.id}`);
+        navigate(`/manageProducts/productDetail/${record.id}`);
       }}
       style={{ color: "blue", cursor: "pointer" }}
     >

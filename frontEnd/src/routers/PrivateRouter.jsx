@@ -2,18 +2,15 @@
 /* eslint-disable no-unused-vars */
 // privateRoutes.js
 import React from "react";
-
-
-
 import ManageUser from "../screens/manageUser/listUser/ManageUser";
-
 import ManageProduct from "../screens/manageProduct/listProduct/ManageProduct";
 import Homepage from "../screens/home/homePage";
 import { AdminLayout } from "../components/adminLayout/AdminLayout";
-
-
 import ManageBrand from "../screens/manageBrand/listBrand/ManageBrand";
 import EditBrand from "../screens/manageBrand/editBrand/EditBrand";
+import ManageCategory from "../screens/manageCategory/listCategory/ManageCategory";
+import EditCategory from "../screens/manageCategory/editCategory/EditCategory";
+import EditProduct from "../screens/manageProduct/editProduct/EditProduct";
 
 
 
@@ -41,6 +38,16 @@ const routes = [
       {
         path: "/manageProducts",
         element: <ManageProduct />,
+      },
+      { path: "/manageProducts/productDetail/:id",
+      element: <EditProduct />
+      },
+      {
+        path: "/manageCategories",
+        element: <ManageCategory />,
+      },
+      { path: "/manageCategories/categoryDetail/:id",
+      element: <EditCategory />
       },
 
       {

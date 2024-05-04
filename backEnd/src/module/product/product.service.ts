@@ -8,6 +8,7 @@ import { getProductDto } from './dto/getProduct.dto';
 import { ResponsePaginate } from 'src/common/dtos/responsePaginate';
 import { PageMetaDto } from 'src/common/dtos/pageMeta';
 import { randomBytes } from 'crypto';
+
 @Injectable()
 export class ProductService {
   constructor(
@@ -15,6 +16,7 @@ export class ProductService {
     private productRespository: Repository<Product>,
     private readonly entityManager: EntityManager,
   ) {}
+
   generateSkuFromName(name: string): string {
     const formattedName = name
       .normalize('NFD')
@@ -23,13 +25,22 @@ export class ProductService {
     const sku = formattedName.replace(/\s+/g, '-');
     const uniqueIdentifier = randomBytes(4).toString('hex');
     const uniqueSku = `${sku}-${uniqueIdentifier}`;
+
     return uniqueSku;
   }
   async createProduct(createProductDto: CreateProductDto): Promise<Product> {
     return new Promise(async (resolve, reject) => {
       try {
-        const { nameProduct, categoryId, brandId, price, quantity, image } =
-          createProductDto;
+        const {
+          nameProduct,
+          categoryId,
+          brandId,
+          price,
+          quantity,
+          image,
+          onSale,
+          coupon,
+        } = createProductDto;
         const sku = this.generateSkuFromName(nameProduct);
         const product = new Product(createProductDto);
         product.nameProduct = nameProduct;
@@ -39,7 +50,9 @@ export class ProductService {
         product.quantity = quantity;
         product.sku = sku;
         product.image = image;
-        product.onSale = false;
+        product.onSale = onSale;
+        product.coupon = coupon;
+
         const savedProduct = await this.entityManager.save(product);
         resolve(savedProduct);
       } catch (error) {
@@ -47,6 +60,7 @@ export class ProductService {
       }
     });
   }
+
   async getProductBySkuBrand(skuBrand: string): Promise<Product[]> {
     try {
       const products = await this.productRespository.find({
@@ -87,6 +101,11 @@ export class ProductService {
         .skip(params.skip)
         .take(params.take)
         .orderBy('product.createdAt', 'DESC');
+      if (params.searchByName) {
+        productsQuery.andWhere('product.nameProduct ILIKE :nameProduct', {
+          nameProduct: `%${params.searchByName}%`,
+        });
+      }
       const [products, total] = await productsQuery.getManyAndCount();
       const pageMetaDto = new PageMetaDto({
         itemCount: total,
@@ -98,6 +117,30 @@ export class ProductService {
       return Promise.reject(error);
     }
   }
+
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  async popularProduct(params: getProductDto): Promise<Product[]> {
+    try {
+      const cheapProducts = await this.productRespository
+        .createQueryBuilder('product')
+        .leftJoinAndSelect('product.category', 'category')
+        .leftJoinAndSelect('product.brand', 'brand')
+        .select([
+          'product',
+          'category.nameCategory',
+          'category.id',
+          'brand.nameBrand',
+          'brand.id',
+        ])
+        .orderBy('product.price', 'ASC') // Sắp xếp theo giá tăng dần
+        .take(4) // Chỉ lấy 4 sản phẩm
+        .getMany();
+      return cheapProducts;
+    } catch (error) {
+      throw error;
+    }
+  }
+
   async getProductById(id: string): Promise<Product> {
     try {
       const product = await this.productRespository
@@ -118,6 +161,28 @@ export class ProductService {
       return Promise.reject(error);
     }
   }
+
+  async getProductBySku(sku: string): Promise<Product> {
+    try {
+      const product = await this.productRespository
+        .createQueryBuilder('product')
+        .leftJoinAndSelect('product.category', 'category')
+        .leftJoinAndSelect('product.brand', 'brand')
+        .select([
+          'product',
+          'category.nameCategory',
+          'category.id',
+          'brand.nameBrand',
+          'brand.id',
+        ])
+        .where('product.sku = :sku', { sku })
+        .getOne();
+      return product;
+    } catch (error) {
+      return Promise.reject(error);
+    }
+  }
+
   async updateProduct(
     id: string,
     updateProductDto: UpdateProductDto,
@@ -136,9 +201,11 @@ export class ProductService {
     product.image = updateProductDto.image;
     product.coupon = updateProductDto.coupon;
     product.sku = this.generateSkuFromName(updateProductDto.nameProduct);
+
     await this.productRespository.save(product);
     return product;
   }
+
   async deleteProduct(id: string): Promise<void> {
     await this.productRespository.softDelete(id);
   }

@@ -61,6 +61,7 @@ export class UserController {
     const result = await this.userService.update(id, updateUserDto);
     return { result, message: 'Successfully update employee' };
   }
+
   @Delete(':id')
   async remove(@Param('id') id: string) {
     try {

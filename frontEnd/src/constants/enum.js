@@ -8,6 +8,9 @@ export const NotificationType = {
   export const API_URL = {
     USER: "/user",
     PRODUCT: "/product",
+    CATEGORY: "/category",
+    BRAND: "/brand",
+    CART: "/cart"
   };
 
   export const DATE_TIME = {

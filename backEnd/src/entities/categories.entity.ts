@@ -1,12 +1,15 @@
 import { AbstractEntity } from 'src/common/entities';
 import { Entity, Column, PrimaryGeneratedColumn, OneToMany } from 'typeorm';
 import { Product } from './products.entity';
+
 @Entity()
 export class Category extends AbstractEntity {
   @PrimaryGeneratedColumn('uuid')
   id: string;
+
   @Column()
   nameCategory: string;
+
   @Column({ nullable: true })
   description: string;
 

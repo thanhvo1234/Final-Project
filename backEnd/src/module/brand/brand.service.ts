@@ -46,6 +46,7 @@ export class BrandService {
   async getBrands(params: GetBrandDto): Promise<ResponsePaginate<Brand>> {
     try {
       const query = this.brandRespository.createQueryBuilder('brand');
+      query.leftJoinAndSelect('brand.products', 'products');
       query.skip(params.skip).take(params.take);
       const [brands, total] = await query.getManyAndCount();
       const pageMetaDto = new PageMetaDto({
@@ -63,15 +64,18 @@ export class BrandService {
   }
 
   async getBrandById(id: string): Promise<Brand> {
-    try {
-      const brand = await this.brandRespository.findOneBy({ id });
-      if (!brand) {
-        throw new Error('Brand not found');
+    return new Promise(async (resolve, reject) => {
+      try {
+        const brand = await this.brandRespository
+          .createQueryBuilder('brand')
+          .leftJoinAndSelect('brand.products', 'products')
+          .where('brand.id = :id', { id })
+          .getOne();
+        resolve(brand);
+      } catch (error) {
+        reject(error);
       }
-      return brand;
-    } catch (error) {
-      throw error;
-    }
+    });
   }
 
   async updateBrand(

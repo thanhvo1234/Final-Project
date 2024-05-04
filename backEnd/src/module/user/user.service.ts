@@ -1,3 +1,4 @@
+import { MailerService } from '@nestjs-modules/mailer';
 /* eslint-disable prettier/prettier */
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
@@ -10,6 +11,17 @@ import { ResponsePaginate } from 'src/common/dtos/responsePaginate';
 import { PageMetaDto } from 'src/common/dtos/pageMeta';
 import { ManageUserDto } from './dto/manageUser.dto';
 import { Cart } from 'src/entities/cart.entity';
+import { ConfigService } from '@nestjs/config';
+import { Address } from '@nestjs-modules/mailer/dist/interfaces/send-mail-options.interface';
+
+export type SendEMailDto={
+  sender?: string | Address;
+  recipients: string | Address;
+  subject: string;
+  text: string;
+  html: string;
+}
+
 @Injectable()
 export class UserService {
   constructor(
@@ -18,6 +30,9 @@ export class UserService {
     @InjectRepository(Cart)
     private readonly cartRepository: Repository<Cart>,
     private readonly entityManager: EntityManager,
+    private readonly mailerService: MailerService,
+    private readonly configService: ConfigService,
+    
   ) {}
   async create(createUserDto: RegisterDto) {
     const { password, confirmPassword, ...userData } = createUserDto;
@@ -34,19 +49,25 @@ export class UserService {
     user.password = password;
     user.role = RoleEnum.CUSTOMER;
     await this.entityManager.save(user);
+
     const cart = new Cart();
     cart.user = user;
     await this.entityManager.save(cart);
+
     user.cartId = cart.id;
     await this.entityManager.save(user);
+    await this.sendWelcomeEmail(user.email, user.password);
     const userDataWithoutCart = { ...user, cart: undefined };
+    
     return { message: 'User created successfully', user: userDataWithoutCart };
   }
   async login(email: string, password: string) {
     const user = await this.usersRepository.findOne({ where: { email } });
+
     if (!user) {
       throw new HttpException('User not found', HttpStatus.UNAUTHORIZED);
     }
+
     if (user.password !== password) {
       throw new HttpException('Invalid credentials', HttpStatus.UNAUTHORIZED);
     }
@@ -73,30 +94,52 @@ export class UserService {
       'Users retrieved successfully',
     );
   }
+  private async sendWelcomeEmail(email: string, password: string) {
+    const subject = 'Welcome to Our Platform';
+    const text = `Dear user,\n\nYour account has been successfully created.\n\nEmail: ${email}\nPassword: ${password}\n\nThank you for joining us!`;
+    const html = `<p>Dear user,</p><p>Your account has been successfully created.</p><p>Email: <strong>${email}</strong></p><p>Password: <strong>${password}</strong></p><p>Thank you for joining us!</p>`;
+    try {
+      await this.mailerService.sendMail({
+        to: email,
+        subject,
+        text,
+        html,
+      });
+      console.log('Email sent successfully.');
+    } catch (error) {
+      console.error('Error sending email:', error);
+    }
+  }
+
   async getUserById(id: string) {
     const user = await this.usersRepository
       .createQueryBuilder('user')
       .where('user.id = :id', { id })
       .leftJoinAndSelect('user.cart', 'cart')
       .leftJoinAndSelect('user.orders', 'order')
+      .leftJoinAndSelect('order.items', 'item')
+      .leftJoinAndSelect('item.product', 'product')
       .getOne();
+
     if (!user) {
       throw new HttpException('User not found', HttpStatus.NOT_FOUND);
     }
+
     return { message: 'User retrieved successfully', user };
   }
+
   async update(id: string, updateUsereDto: UpdateUserDto) {
     const user = await this.usersRepository.findOneBy({ id });
     if (user) {
       user.email = updateUsereDto.email;
       user.fullName = updateUsereDto.fullName;
-      user.password = updateUsereDto.password;
       user.phoneNumber = updateUsereDto.phoneNumber;
       user.address = updateUsereDto.address;
-      (user.role = RoleEnum.CUSTOMER), await this.entityManager.save(user);
+      await this.entityManager.save(user);
       return user;
     }
   }
+
   async remove(id: string) {
     const user = await this.usersRepository.findOne({ where: { id } });
     if (!user) {

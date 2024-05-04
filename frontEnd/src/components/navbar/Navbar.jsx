@@ -1,43 +1,72 @@
-import React, { useState, useContext, useRef } from 'react';
+// Navbar.js
 import "./Navbar.css";
 import logo from "../../assets/logo.png";
-import cart_icon from "../../assets/cart_icon.png";
-import { Link } from "react-router-dom";
-import { ShopContext } from "../../context/ShopContext";
-import down_arrow from "../../assets/down_arrow.png"
+import cart from "../../assets/cart.png";
+import userImg from "../../assets/user.jpg";
+import search from "../../assets/search.jpg";
+import { Link, useNavigate } from "react-router-dom";
+import { useGetCartData } from "../../hooks/useCart";
 
 const Navbar = () => {
+  const navigate = useNavigate();
+  const isAuthenticated = localStorage.getItem("authenticated") === "true";
+  const user = JSON.parse(localStorage.getItem('user'));
+  const cartId = user?.cart?.id;
+  const userId = user?.userId;
+  const { data: cartData } = useGetCartData(cartId);
+  const count = (cartData?.data?.items?.length) || 0;
+  const handleLogout = () => {
+    localStorage.removeItem("user");
+    localStorage.removeItem("authenticated");
+    localStorage.removeItem("shippingAddress");
+    navigate("/", { replace: true });
+  };
 
-    const [menu, setMenu] = useState("shop");
-    const {getTotalCartItems} = useContext(ShopContext);
-    const menuRef = useRef();
-
-    const down_arrow_toggle = (e) =>{
-        menuRef.current.classList.toggle("nav-menu-visible");
-        e.target.classList.toggle("open");
-    }
-    
-
-    return (
-        <div className="navBar">
-            <div className="nav-logo">
-                <img src={logo} alt="" />
-                
-            </div>
-            <img className='nav-menu-dropdown' onClick={down_arrow_toggle} src={down_arrow} alt="" />
-            <ul ref={menuRef} className="nav-menu">
-                <li onClick={()=>{setMenu("shop")}}><Link className="nav-link" style={{textDecoration:"none"}} to="/">Shop</Link>{menu==="shop"?<hr/>:null}</li>
-                <li onClick={()=>{setMenu("mens")}}><Link className="nav-link" style={{textDecoration:"none"}} to="/mens">Men</Link>{menu==="mens"?<hr/>:null}</li>
-                <li onClick={()=>{setMenu("womens")}}><Link className="nav-link" style={{textDecoration:"none"}} to="/womens">Women</Link>{menu==="womens"?<hr/>:null}</li>
-                <li onClick={()=>{setMenu("kids")}}><Link className="nav-link" style={{textDecoration:"none"}} to="/kids">Kids</Link>{menu==="kids"?<hr/>:null}</li>
-            </ul>
-            <div className="nav-login-cart">
-                <Link to="/login"><button>Login</button></Link>
-                <Link to="/cart"><img src={cart_icon} alt="" /></Link>
-                <div className="nav-cart-count">{getTotalCartItems()}</div>
-            </div>
-        </div>
-    )
-}
+  return (
+    <div className="navbar">
+      <div className="nav-logo">
+        <Link style={{textDecoration: 'none'}} to="/"><img src={logo} alt="" style={{ width:"200px", height: "100px" }} /></Link>
+      </div>
+      <div className="nav-login-cart">
+      {isAuthenticated ? (
+        <>
+        <Link style={{ textDecoration: 'none' }} to="/search">
+            <img src={search} alt="" style={{ width: "auto", height: "30px" }} />
+          </Link>
+          <Link style={{ textDecoration: 'none' }} to={`/profile/${userId}`}>
+            <img src={userImg} alt="" style={{ width: "auto", height: "30px" }} />
+          </Link>
+          <Link style={{ textDecoration: 'none' }} to="/cart">
+            <img src={cart} alt="" style={{ width: "auto", height: "25px" }} />
+          </Link>
+        </>
+      ) : (
+        <>
+        <Link style={{ textDecoration: 'none' }} to="/search">
+            <img src={search} alt="" style={{ width: "auto", height: "30px" }} />
+          </Link>
+          <Link style={{ textDecoration: 'none' }} to="/">
+            <img src={userImg} alt="" style={{ width: "auto", height: "30px" }} />
+          </Link>
+          <Link style={{ textDecoration: 'none' }} to="/">
+            <img src={cart} alt="" style={{ width: "auto", height: "25px" }} />
+          </Link>
+        </>
+      )}
+      
+      <div className="nav-item-count">{count}</div>
+        {isAuthenticated ? (
+          <button onClick={handleLogout}>
+            Logout
+          </button>
+        ) : (
+          <Link style={{ textDecoration: 'none' }} to="/login">
+            <button>Login</button>
+          </Link>
+        )}
+      </div>
+    </div>
+  );
+};
 
 export default Navbar;

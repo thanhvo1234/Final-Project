@@ -1,39 +1,50 @@
-import { useState } from "react";
+/* eslint-disable react-hooks/exhaustive-deps */
+import { useState, useEffect } from "react";
 import { Button, Form, Input, Alert } from "antd";
 import "./Login.css";
 import { Link, useNavigate } from "react-router-dom";
 import { loginUserAPI } from "../../api/apiUrl";
-import axios from "axios";
-import {notification} from "antd";
-
-
-
-const openNotificationWithIcon = (type, message) => {
-  notification[type]({
-    message: message,
-  });
-};
+import { openNotificationWithIcon } from "../../components/notification/Notification";
 
 const Login = () => {
   const navigate = useNavigate();
   const [showAlert, setShowAlert] = useState(false);
   const [showError, setShowError] = useState(false);
 
+  useEffect(() => {
+    checkAuthentication();
+  }, []);
+
+  const checkAuthentication = () => {
+    const isAuthenticated = localStorage.getItem("authenticated") === "true";
+
+    if (isAuthenticated) {
+      navigate("/");
+    }
+  };
+
   const handleSuccessfulLogin = (userData) => {
     openNotificationWithIcon("success", "Login Successfully");
     setShowAlert(true);
 
     const user = {
+      userId: userData.id || null,
       fullName: userData.fullName || null,
       phoneNumber: userData.phoneNumber || null,
       email: userData.email,
-      address: userData.address || null
+      address: userData.address || null,
+      cart: userData.cart || null,
+      role: userData.role || "user"
     };
     console.log(user,"aaa");
     console.log(userData,"bbb");
     localStorage.setItem("user", JSON.stringify(user));
     localStorage.setItem("authenticated", "true");
-    navigate("/manageUsers");
+    if (user.role === "admin") {
+      navigate("/manageUsers");
+    } else {
+      navigate("/");
+    }
   };
 
   const handleFailedLogin = () => {
@@ -61,11 +72,13 @@ const Login = () => {
   };
 
   return (
-    <div className="login-container">
+    <div className="login__container">
       <div className="login">
-        <Form name="login-form"
+        <Form
+          name="login-form"
           onFinish={onFinish}
-          onFinishFailed={onFinishFailed}>
+          onFinishFailed={onFinishFailed}
+        >
           {showAlert && (
             <Alert
               message="Login Successfully"
@@ -95,8 +108,9 @@ const Login = () => {
                 required: true,
                 message: "Please input your email!",
               },
-            ]}>
-            <Input className="custom-input" placeholder="Enter your Email" />
+            ]}
+          >
+            <Input placeholder="Enter your Email" />
           </Form.Item>
           <p className="title">Password</p>
           <Form.Item
@@ -106,8 +120,9 @@ const Login = () => {
                 required: true,
                 message: "Please input your password!",
               },
-            ]}>
-            <Input.Password className="custom-input" placeholder="Enter your Password" />
+            ]}
+          >
+            <Input.Password placeholder="Enter your Password" />
           </Form.Item>
           <Form.Item>
             <Button
