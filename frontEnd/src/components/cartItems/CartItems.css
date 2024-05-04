@@ -8,9 +8,9 @@
 }
 .cartitems-format-main{
     display: grid;
-    grid-template-columns: 0.5fr 2fr 1fr 1fr 1fr 1fr;
+    grid-template-columns: 0.5fr 2fr 1fr 1fr 1fr 1fr 1fr;
     align-items: center;
-    gap: 75px;
+    gap: 30px;
     padding: 20px 0px;
     color: #454545;
     font-size: 18px;
@@ -42,25 +42,67 @@
     flex: 1;
     display: flex;
     flex-direction: column;
-    margin-right: 200px;
     gap: 40px;
 }
-.cartimtes-total-item{
+.cartitems-total-item{
     display: flex;
+    flex-direction: row;
     justify-content: space-between;
-    padding: 15px 0px;
+    margin-bottom: 20px;
 }
 .cartitems-total button{
     width: 262px;
     height: 58px;
     outline: none;
     border: none;
-    background: #ff5a5a;
+    border-radius: 20px;
+    background: #655aff;
     color: #fff;
     font-size: 16px;
     font-weight: 600;
     cursor: pointer;
 }
+.quantity-controls {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 5px;
+}
+.create-order-container {
+    display: flex;
+    justify-content: flex-end;
+    margin-top: 20px;
+  }
+.quantity-controls button {
+    padding: 0 10px;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 3px;
+    font-size: 18px; /* Kích thước chữ cho + và - */
+    cursor: pointer;
+}
+.buttonRemoveItem{
+    width: 100px;
+    height: 40px;
+    outline: none;
+    border: none;
+    background: #e00b0b;
+    color: #fff;
+    font-size: 14px;
+    border-radius: 20px;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+.quantity-controls span {
+    width: 40px; /* Đặt chiều rộng cố định cho số lượng */
+    text-align: center; /* Căn giữa số lượng */
+    line-height: 30px; /* Chiều cao dòng cho khớp với nút */
+    background-color: #fff;
+    border: 1px solid #ddd; /* Đường viền cho số lượng */
+}
+
 .cartitems-promocode{
     flex: 1;
     font-size: 16px;

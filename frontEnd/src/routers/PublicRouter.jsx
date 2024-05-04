@@ -8,6 +8,8 @@ import Navbar from "../components/navbar/Navbar";
 import Homepage from "../screens/home/homePage";
 // import { Footer } from "antd/es/layout/layout";
 import Footer from "../components/footer/Footer";
+import ShoppingCart from "../screens/cartAction/ShoppingCart";
+import ShippingAddress from "../screens/cartAction/ShippingAddress";
 
 
 const PublicRoutes = () => {
@@ -33,6 +35,12 @@ const publicRoutes = [
         path: "/productDetail/:sku",
         element: <Product />
       },
+      { path: "/cart",
+       element: <ShoppingCart /> },
+
+      { path: "/shippingAddress",
+       element: <ShippingAddress /> },
+
     ],
   },
 ];
