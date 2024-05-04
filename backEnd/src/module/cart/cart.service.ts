@@ -24,28 +24,31 @@ export class CartService {
     return this.cartRepository
       .createQueryBuilder('cart')
       .leftJoinAndSelect('cart.items', 'items')
+      .leftJoinAndSelect('cart.user', 'user')
       .leftJoin('items.product', 'product')
       .select([
         'cart',
         'items',
+        'user',
         'product.nameProduct',
         'product.price',
         'product.coupon',
+        'product.image',
+        'product.sku',
+        'product.coupon',
       ])
+      .orderBy('items.updatedAt', 'DESC')
       .where('cart.id = :id', { id: cartId })
       .getOne();
   }
 
   async addProductToCart(cartId: string, productId: string): Promise<CartItem> {
-    // Kiểm tra xem sản phẩm có tồn tại không
     const product = await this.productRepository.findOne({
       where: { id: productId },
     });
     if (!product) {
       throw new HttpException('Product not found', HttpStatus.NOT_FOUND);
     }
-
-    // Kiểm tra xem giỏ hàng có tồn tại không
     const cart = await this.cartRepository.findOne({
       where: { id: cartId },
       relations: ['items'],
@@ -53,8 +56,6 @@ export class CartService {
     if (!cart) {
       throw new HttpException('Cart not found', HttpStatus.NOT_FOUND);
     }
-
-    // Kiểm tra xem sản phẩm đã tồn tại trong giỏ hàng chưa
     const existingCartItem = await this.cartItemRepository.findOne({
       where: { product: { id: productId }, cart: { id: cartId } },
     });
@@ -64,7 +65,6 @@ export class CartService {
         HttpStatus.BAD_REQUEST,
       );
     }
-
     let priceAfterDiscount = product.price;
     if (product.coupon > 0) {
       const discountAmount = (product.price * product.coupon) / 100;
@@ -73,15 +73,12 @@ export class CartService {
 
     const cartItem = new CartItem();
     cartItem.product = product;
-    cartItem.quantity = 1; // Số lượng mặc định là 1
+    cartItem.quantity = 1;
     cartItem.priceForEach = priceAfterDiscount;
     cartItem.total = priceAfterDiscount * cartItem.quantity;
     cartItem.cart = cart;
 
-    // Lưu cartItem vào cơ sở dữ liệu
     await this.cartItemRepository.save(cartItem);
-
-    // Cập nhật totalPrice của cart
     cart.totalPrice += cartItem.total;
     await this.cartRepository.save(cart);
     await this.cartItemRepository.save(cartItem);
@@ -90,11 +87,11 @@ export class CartService {
 
   async increaseProductQuantity(
     cartId: string,
-    productId: string,
+    cartItemId: string,
   ): Promise<CartItem> {
-    // Tìm mục giỏ hàng tương ứng với productId trong cartId
     const cartItem = await this.cartItemRepository.findOne({
-      where: { product: { id: productId }, cart: { id: cartId } },
+      where: { id: cartItemId },
+      relations: ['cart'],
     });
     if (!cartItem) {
       throw new HttpException(
@@ -102,31 +99,25 @@ export class CartService {
         HttpStatus.NOT_FOUND,
       );
     }
-
-    // Tăng số lượng sản phẩm lên 1
     cartItem.quantity += 1;
     cartItem.total = cartItem.priceForEach * cartItem.quantity;
-
-    // Lưu cartItem đã cập nhật vào cơ sở dữ liệu
     await this.cartItemRepository.save(cartItem);
     const cart = await this.cartRepository.findOne({
       where: { id: cartId },
       relations: ['items'],
     });
     cart.totalPrice = cart.items.reduce((total, item) => total + item.total, 0);
-    // Tính toán lại totalPrice của giỏ hàng và lưu lại vào cơ sở dữ liệu
     await this.cartRepository.save(cart);
-
     return cartItem;
   }
 
   async decreaseProductQuantity(
     cartId: string,
-    productId: string,
+    cartItemId: string,
   ): Promise<CartItem> {
-    // Tìm mục giỏ hàng tương ứng với productId trong cartId
     const cartItem = await this.cartItemRepository.findOne({
-      where: { product: { id: productId }, cart: { id: cartId } },
+      where: { id: cartItemId },
+      relations: ['cart'],
     });
     if (!cartItem) {
       throw new HttpException(
@@ -134,16 +125,10 @@ export class CartService {
         HttpStatus.NOT_FOUND,
       );
     }
-
-    // Giảm số lượng sản phẩm đi 1
     if (cartItem.quantity > 1) {
       cartItem.quantity -= 1;
       cartItem.total = cartItem.priceForEach * cartItem.quantity;
-
-      // Lưu cartItem đã cập nhật vào cơ sở dữ liệu
       await this.cartItemRepository.save(cartItem);
-
-      // Tính toán lại totalPrice của giỏ hàng và lưu lại vào cơ sở dữ liệu
       const cart = await this.cartRepository.findOne({
         where: { id: cartId },
         relations: ['items'],
@@ -154,24 +139,33 @@ export class CartService {
       );
       await this.cartRepository.save(cart);
     }
-
     return cartItem;
   }
 
   async removeCartItemFromCart(cartItemId: string): Promise<void> {
-    // Tìm cartItem để xóa
     const cartItem = await this.cartItemRepository.findOne({
       where: { id: cartItemId },
       relations: ['cart'],
     });
+
     if (!cartItem) {
       throw new HttpException('Cart item not found', HttpStatus.NOT_FOUND);
     }
-    const cart = cartItem.cart;
-    cart.totalPrice -= cartItem.total;
+
+    await this.cartItemRepository.remove(cartItem);
+    const cart = await this.cartRepository.findOne({
+      where: { id: cartItem.cart.id },
+      relations: ['items'],
+    });
+
+    if (!cart) {
+      throw new HttpException('Cart not found', HttpStatus.NOT_FOUND);
+    }
+    cart.totalPrice = cart.items.reduce(
+      (total, item) => total + (item.id === cartItemId ? 0 : item.total),
+      0,
+    );
     await this.cartRepository.save(cart);
-    // Xóa cartItem từ cơ sở dữ liệu
-    await this.cartItemRepository.delete(cartItem);
   }
 
   async getCarts(params: GetCartDto): Promise<ResponsePaginate<Cart>> {
@@ -193,5 +187,19 @@ export class CartService {
     } catch (error) {
       throw error;
     }
+  }
+
+  async clearCart(cartId: string): Promise<void> {
+    const cart = await this.cartRepository.findOne({
+      where: { id: cartId },
+      relations: ['items'],
+    });
+
+    if (!cart) {
+      throw new Error('Cart not found');
+    }
+    cart.items = [];
+    cart.totalPrice = 0;
+    await this.cartRepository.save(cart);
   }
 }

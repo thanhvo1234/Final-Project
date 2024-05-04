@@ -8,9 +8,10 @@ import {
   import { Cart } from './cart.entity';
   import { Product } from './products.entity';
   import { Order } from './orders.entity';
+import { AbstractEntity } from 'src/common/entities';
   
   @Entity()
-  export class CartItem {
+  export class CartItem extends AbstractEntity {
     @PrimaryGeneratedColumn('uuid')
     id: string;
   
