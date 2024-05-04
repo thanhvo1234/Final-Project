@@ -10,6 +10,9 @@ import Homepage from "../screens/home/homePage";
 import Footer from "../components/footer/Footer";
 import ShoppingCart from "../screens/cartAction/ShoppingCart";
 import ShippingAddress from "../screens/cartAction/ShippingAddress";
+import PreviewOrder from "../screens/cartAction/PreviewOrder";
+import OrderDetail from "../screens/orderAction/OrderDetail";
+import Profile from "../screens/profile/Profile";
 
 
 const PublicRoutes = () => {
@@ -41,6 +44,15 @@ const publicRoutes = [
       { path: "/shippingAddress",
        element: <ShippingAddress /> },
 
+      { path: "/previewOrder",
+       element: <PreviewOrder /> },
+
+      { path: "/profile/:id", 
+      element: <Profile /> },
+
+
+      { path: "/order/:id", 
+      element: <OrderDetail />  }
     ],
   },
 ];

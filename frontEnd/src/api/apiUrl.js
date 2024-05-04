@@ -95,3 +95,20 @@ import { API_URL } from "../constants/enum";
 
 export const decreaseProductQuantityAPI = (cartId, cartItemId) =>
   axios.post(`${API_URL.CART}/${cartId}/decrease/${cartItemId}`);
+
+  //order:
+  export const createOrderAPI = (params) => {
+    return axios.post(API_URL.ORDER, params);
+  };
+
+  export const getDetailOrderAPI = (orderId, params) =>
+  axios.get(`${API_URL.ORDER}/${orderId}`, { params });
+
+  export const getOrderAPI = (params) =>
+  axios.get(API_URL.ORDER, { params });
+
+  export const paymentAPI = (params) =>
+  axios.post(`${API_URL.ORDER}/paymentMomo`, params);
+
+  export const payOrderAPI = (orderId, params) =>
+  axios.patch(`${API_URL.ORDER}/${orderId}`, params);

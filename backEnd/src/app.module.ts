@@ -8,6 +8,7 @@ import { ProductModule } from './module/product/product.module';
 import { BrandModule } from './module/brand/brand.module';
 import { CategoryModule } from './module/category/category.module';
 import { CartModule } from './module/cart/cart.module';
+import { OrdersModule } from './module/order/order.module';
 import { MailerModule } from '@nestjs-modules/mailer';
 
 @Module({
@@ -19,6 +20,7 @@ import { MailerModule } from '@nestjs-modules/mailer';
     BrandModule,
     CategoryModule,
     CartModule,
+    OrdersModule,
     MailerModule.forRootAsync({
       imports: [ConfigModule],
       useFactory: async (configService: ConfigService) => ({

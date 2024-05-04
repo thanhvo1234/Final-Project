@@ -10,7 +10,8 @@ export const NotificationType = {
     PRODUCT: "/product",
     CATEGORY: "/category",
     BRAND: "/brand",
-    CART: "/cart"
+    CART: "/cart",
+    ORDER: "/order"
   };
 
   export const DATE_TIME = {

@@ -3,5 +3,6 @@ export const QUERY_KEY = {
     PRODUCT: "PRODUCT",
     CATEGORY: "CATEGORY",
     BRAND: "BRAND",
-    CART:"CART"
+    CART:"CART",
+    ORDER:"Order"
 };
