@@ -9,7 +9,7 @@ const CardProduct = ({ data }) => {
 
   // Format price using USD currency
   const formatPrice = (price) => {
-    return new Intl.NumberFormat('en-VN', {
+    return new Intl.NumberFormat('vi-VN', {
       style: 'currency',
       currency: 'VND',
     }).format(price);

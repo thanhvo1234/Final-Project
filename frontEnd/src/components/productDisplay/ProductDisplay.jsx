@@ -6,6 +6,12 @@ import { useAddToCart } from '../../hooks/useCart';
 
 const ProductDisplay = ({ product }) => {
   const addToCartMutation = useAddToCart();
+  const formatPrice = (price) => {
+    return new Intl.NumberFormat('vi-VN', {
+      style: 'currency',
+      currency: 'VND',
+    }).format(price);
+  };
   const user = JSON.parse(localStorage.getItem('user'));
   const cartId = user?.cart?.id;  // Use optional chaining to avoid errors if 'user' or 'cart' is undefined
 
@@ -30,7 +36,7 @@ const ProductDisplay = ({ product }) => {
           <p>({product.quantity})</p>
         </div>
         <div className="productdisplay-right-prices">
-          <div className="productdisplay-right-price-new">${product.price}</div>
+          <div className="productdisplay-right-price-new">{formatPrice(product.price)}</div>
         </div>
         <div className="productdisplay-right-description">
           {product.description}
