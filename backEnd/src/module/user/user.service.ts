@@ -35,7 +35,14 @@ export class UserService {
     
   ) {}
   async create(createUserDto: RegisterDto) {
-    const { password, confirmPassword, ...userData } = createUserDto;
+    const { password, email, confirmPassword, ...userData } = createUserDto;
+    const existingUser = await this.entityManager.findOne(User, { where: { email } });
+    if (existingUser) {
+        throw new HttpException(
+            'Email is already in use',
+            HttpStatus.BAD_REQUEST,
+        );
+    }
   
     if (password !== confirmPassword) {
       throw new HttpException(

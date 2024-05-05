@@ -13,6 +13,7 @@ import ShippingAddress from "../screens/cartAction/ShippingAddress";
 import PreviewOrder from "../screens/cartAction/PreviewOrder";
 import OrderDetail from "../screens/orderAction/OrderDetail";
 import Profile from "../screens/profile/Profile";
+import SearchPage from "../screens/search/SearchPage";
 
 
 const PublicRoutes = () => {
@@ -52,7 +53,12 @@ const publicRoutes = [
 
 
       { path: "/order/:id", 
-      element: <OrderDetail />  }
+      element: <OrderDetail />  },
+
+      {
+        path: "/search",
+        element: <SearchPage />,
+      },
     ],
   },
 ];
