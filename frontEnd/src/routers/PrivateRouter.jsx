@@ -11,6 +11,7 @@ import EditBrand from "../screens/manageBrand/editBrand/EditBrand";
 import ManageCategory from "../screens/manageCategory/listCategory/ManageCategory";
 import EditCategory from "../screens/manageCategory/editCategory/EditCategory";
 import EditProduct from "../screens/manageProduct/editProduct/EditProduct";
+import ManageOrder from "../screens/manageOrder/ManageOrder";
 
 
 
@@ -56,6 +57,11 @@ const routes = [
       },
       { path: "/manageBrands/brandDetail/:id",
       element: <EditBrand />
+      },
+
+      {
+        path: "/manageOrders",
+        element: <ManageOrder />,
       },
 
       {

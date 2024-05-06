@@ -5,14 +5,9 @@ export class UpdateUserDto {
   email: string;
 
   @IsNotEmpty()
-  password: string;
-
-  @IsNotEmpty()
   fullName: string;
 
-  @IsNotEmpty()
   phoneNumber: string;
 
-  @IsNotEmpty()
   address: string;
 }

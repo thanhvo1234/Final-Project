@@ -45,8 +45,8 @@ export const LayoutSider = ({ collapsed = true }) => {
 
   const menu = [
     {
-      key: "dashboard",
-      icon: <DashboardOutlined />,
+      key: "manageProducts",
+      icon: <SkinOutlined />,
       label: <Translation>{(t) => t("SIDEBAR.PRODUCT")}</Translation>,
     },
     {
@@ -54,10 +54,11 @@ export const LayoutSider = ({ collapsed = true }) => {
       icon: <UserOutlined />,
       label: <Translation>{(t) => t("SIDEBAR.USER")}</Translation>,
     },
+    
     {
-      key: "manageProducts",
+      key: "manageOrders",
       icon: <SkinOutlined />,
-      label: <Translation>{(t) => t("SIDEBAR.PRODUCT")}</Translation>,
+      label: <Translation>{(t) => t("SIDEBAR.ORDER")}</Translation>,
     },
     {
       key: "manageCategories",
