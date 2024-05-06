@@ -19,6 +19,7 @@ import { formatCurrency } from "../../helpers/format";
 export default function OrderDetail() {
   const { id } = useParams();
   const navigate = useNavigate();
+  const user = JSON.parse(localStorage.getItem("user"));
   const { data: order, isLoading, isError } = useGetOneOrder(id);
   const updateOrderMutation = usePaysuccessData(id); // Initialize the hook
   const makeMomoPaymentMutation = useMakeMomoPayment();
@@ -69,6 +70,38 @@ export default function OrderDetail() {
       },
     });
   };
+  const handleDeliverySuccess = async () => {
+    const updatedData = {
+      isDelivery: "success",
+      deliveryAt: new Date().toISOString(),
+    };
+
+    updateOrderMutation.mutateAsync(updatedData, {
+      onSuccess: () => {
+        console.log("Order updated successfully.");
+        navigate(`/order/${id}`); // Assuming this route shows the updated order
+      },
+      onError: (error) => {
+        console.error("Failed to update order:", error);
+      },
+    });
+  };
+
+  const handleChangeDelivery = async () => {
+    const updatedData = {
+      isDelivery: "delivering",
+    };
+
+    updateOrderMutation.mutateAsync(updatedData, {
+      onSuccess: () => {
+        console.log("Order updated successfully.");
+        navigate(`/order/${id}`); // Assuming this route shows the updated order
+      },
+      onError: (error) => {
+        console.error("Failed to update order:", error);
+      },
+    });
+  };
 
   return (
     <div className="container">
@@ -103,6 +136,22 @@ export default function OrderDetail() {
                   ? "Not Delivered"
                   : "Delivering for 3 day"}
               </div>
+              {user.role === "admin" &&
+                order?.order.isDelivery === "pending" &&
+                order?.order.isPaid === "success" && (
+                  <div className="button-container">
+                    <Button className="delivery-button" onClick={handleChangeDelivery}>Delivery</Button>
+                  </div>
+                )}
+
+              {user.role === "admin" &&
+                order?.order.isDelivery === "delivering" && (
+                  <div className="button-container">
+                    <Button className="delivery-success-button ms-auto" onClick={handleDeliverySuccess}>
+                      Delivery Success
+                    </Button>
+                  </div>
+                )}
             </Card.Body>
           </Card>
 

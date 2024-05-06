@@ -38,6 +38,37 @@
     padding: 10px 30px;
     border-radius: 10px;
   }
+  .button-container {
+    display: flex;
+    justify-content: flex-end;
+  }
+  
+.delivery-button {
+  background-color: #007bff;
+  color: #fff;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.delivery-button:hover {
+  background-color: #0056b3;
+}
+
+.delivery-success-button {
+  background-color: #28a745;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.delivery-success-button:hover {
+  background-color: #218838;
+}
 
   .btn-primary:hover {
     background-color: #0c3e46;

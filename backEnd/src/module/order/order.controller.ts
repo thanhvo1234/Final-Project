@@ -70,7 +70,7 @@ import {
       @Body(new ValidationPipe()) updateOrderDto: UpdateOrderDto,
     ) {
       const result = await this.orderService.updateOrder(id, updateOrderDto);
-      return { result, message: 'Successfully update employee' };
+      return { result, message: 'Successfully update order' };
     }
   }
   

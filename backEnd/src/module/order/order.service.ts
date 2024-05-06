@@ -87,7 +87,7 @@ export class OrderService {
       return new ResponsePaginate<Order>(
         orders,
         pageMetaDto,
-        'Brands retrieved successfully',
+        'Get data of order success',
       );
     } catch (error) {
       throw error;
