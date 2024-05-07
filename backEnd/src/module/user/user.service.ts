@@ -43,7 +43,6 @@ export class UserService {
             HttpStatus.BAD_REQUEST,
         );
     }
-  
     if (password !== confirmPassword) {
       throw new HttpException(
         'Password and Confirm Password do not match',
@@ -54,6 +53,7 @@ export class UserService {
     // Tạo một người dùng mới và lưu vào cơ sở dữ liệu
     const user = new User(userData);
     user.password = password;
+    user.email = email;
     user.role = RoleEnum.CUSTOMER;
     await this.entityManager.save(user);
 

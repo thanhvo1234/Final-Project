@@ -13,12 +13,7 @@ const Register = () => {
   const handleSuccessfulRegistration = () => {
     openNotificationWithIcon("success", "Registration Successful");
     setShowAlert(true);
-    navigate("/login"); // Chuyển hướng đến trang đăng nhập sau khi đăng ký thành công
-  };
-
-  const handleFailedRegistration = () => {
-    openNotificationWithIcon("error", "Registration Failed");
-    setShowError(true);
+    navigate("/login");
   };
 
   const onFinish = async (values) => {
@@ -27,14 +22,15 @@ const Register = () => {
       console.log("Response:", response);
       if (response.status === 200 || response.status === 201) {
         handleSuccessfulRegistration();
-      } else {
-        handleFailedRegistration();
       }
     } catch (error) {
       console.error("Registration error:", error);
-      handleFailedRegistration();
+      const errMsg = error.response?.data?.message || "Registration Failed";
+      openNotificationWithIcon("error", errMsg);
+      setShowError(true);
     }
   };
+  
 
   const onFinishFailed = (errorInfo) => {
     console.log("Failed:", errorInfo);

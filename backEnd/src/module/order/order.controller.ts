@@ -65,12 +65,13 @@ import {
     }
   
     @Patch(':id')
-    async update(
-      @Param('id') id: string,
-      @Body(new ValidationPipe()) updateOrderDto: UpdateOrderDto,
-    ) {
-      const result = await this.orderService.updateOrder(id, updateOrderDto);
-      return { result, message: 'Successfully update order' };
+  async update(@Param('id') id: string, @Body() updateOrderDto: UpdateOrderDto) {
+    try {
+      const order = await this.orderService.updateOrder(id, updateOrderDto);
+      return { data: order, message: 'Order successfully updated.' };
+    } catch (error) {
+      throw new HttpException(error.response || 'Unknown error occurred', error.status || HttpStatus.INTERNAL_SERVER_ERROR);
     }
+  }
   }
   

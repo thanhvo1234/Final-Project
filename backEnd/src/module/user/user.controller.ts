@@ -9,6 +9,8 @@ import {
   Query,
   Get,
   Delete,
+  HttpException,
+  HttpStatus,
 } from '@nestjs/common';
 import { UserService } from './user.service';
 import { RegisterDto } from './dto/register.dto';
@@ -25,9 +27,15 @@ export class UserController {
 
   @Post('register')
   async create(@Body() registerDto: RegisterDto) {
-    const result = await this.userService.create(registerDto);
-    return { result, message: 'Successfully create new employee' };
+    try {
+      const result = await this.userService.create(registerDto);
+      return { result, message: 'Successfully created new user' };
+    } catch (error) {
+      // Gửi lỗi về cho client
+      throw new HttpException(error.response || 'Unknown error', error.status || HttpStatus.INTERNAL_SERVER_ERROR);
+    }
   }
+  
   @Get()
   findAll(@Query() params: ManageUserDto) {
     return this.userService.getUsers(params);

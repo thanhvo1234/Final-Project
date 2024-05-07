@@ -8,6 +8,7 @@ import { getProductDto } from './dto/getProduct.dto';
 import { ResponsePaginate } from 'src/common/dtos/responsePaginate';
 import { PageMetaDto } from 'src/common/dtos/pageMeta';
 import { randomBytes } from 'crypto';
+import { PageOptionsDto } from 'src/common/dtos/pageOption';
 
 @Injectable()
 export class ProductService {
@@ -85,7 +86,17 @@ export class ProductService {
     }
   }
 
-  async getProducts(params: getProductDto): Promise<ResponsePaginate<Product>> {
+  async getProducts(params: PageOptionsDto): Promise<ResponsePaginate<Product>> {
+    let orderByField = 'product.createdAt';  // Default sorting field
+    let orderByDirection: 'ASC' | 'DESC' = 'DESC';  // Explicitly type the variable
+
+    if (params.sortBy === 'price_asc') {
+      orderByField = 'product.price';
+      orderByDirection = 'ASC';
+    } else if (params.sortBy === 'price_desc') {
+      orderByField = 'product.price';
+      orderByDirection = 'DESC';
+    }
     try {
       const productsQuery = this.productRespository
         .createQueryBuilder('product')
@@ -100,12 +111,29 @@ export class ProductService {
         ])
         .skip(params.skip)
         .take(params.take)
-        .orderBy('product.createdAt', 'DESC');
+        .orderBy(orderByField, orderByDirection);
+        
       if (params.searchByName) {
         productsQuery.andWhere('product.nameProduct ILIKE :nameProduct', {
           nameProduct: `%${params.searchByName}%`,
         });
       }
+
+      if (params.categoryId) {
+        productsQuery.andWhere('category.id = :categoryId', { categoryId: params.categoryId });
+      }
+
+      if (params.minPrice !== undefined && params.maxPrice !== undefined) {
+        productsQuery.andWhere('product.price BETWEEN :minPrice AND :maxPrice', {
+          minPrice: params.minPrice,
+          maxPrice: params.maxPrice
+        });
+      } else if (params.minPrice !== undefined) {
+        productsQuery.andWhere('product.price >= :minPrice', { minPrice: params.minPrice });
+      } else if (params.maxPrice !== undefined) {
+        productsQuery.andWhere('product.price <= :maxPrice', { maxPrice: params.maxPrice });
+      }
+
       const [products, total] = await productsQuery.getManyAndCount();
       const pageMetaDto = new PageMetaDto({
         itemCount: total,
@@ -117,6 +145,7 @@ export class ProductService {
       return Promise.reject(error);
     }
   }
+
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   async popularProduct(params: getProductDto): Promise<Product[]> {
@@ -162,26 +191,52 @@ export class ProductService {
     }
   }
 
-  async getProductBySku(sku: string): Promise<Product> {
+  async getProductBySku(sku: string): Promise<any> {
     try {
-      const product = await this.productRespository
-        .createQueryBuilder('product')
-        .leftJoinAndSelect('product.category', 'category')
-        .leftJoinAndSelect('product.brand', 'brand')
-        .select([
-          'product',
-          'category.nameCategory',
-          'category.id',
-          'brand.nameBrand',
-          'brand.id',
-        ])
-        .where('product.sku = :sku', { sku })
-        .getOne();
-      return product;
+        // Fetch the main product with its category and brand.
+        const product = await this.productRespository
+            .createQueryBuilder('product')
+            .leftJoinAndSelect('product.category', 'category')
+            .leftJoinAndSelect('product.brand', 'brand')
+            .select([
+                'product',
+                'category.nameCategory',
+                'category.id',
+                'brand.nameBrand',
+                'brand.id',
+            ])
+            .where('product.sku = :sku', { sku })
+            .getOne();
+
+        if (!product) {
+            throw new Error('Product not found');
+        }
+
+        // If the main product is found, fetch related products from the same category and brand.
+        const relatedProductsByCategory = await this.productRespository
+            .createQueryBuilder('product')
+            .where('product.categoryId = :categoryId', { categoryId: product.categoryId })
+            .andWhere('product.id != :id', { id: product.id })
+            .limit(5)
+            .getMany();
+
+        const relatedProductsByBrand = await this.productRespository
+            .createQueryBuilder('product')
+            .where('product.brandId = :brandId', { brandId: product.brandId })
+            .andWhere('product.id != :id', { id: product.id })
+            .limit(5)
+            .getMany();
+
+        return {
+            product,
+            relatedProductsByCategory,
+            relatedProductsByBrand
+        };
     } catch (error) {
-      return Promise.reject(error);
+        return Promise.reject(error);
     }
-  }
+}
+
 
   async updateProduct(
     id: string,
@@ -191,6 +246,7 @@ export class ProductService {
     if (!product) {
       throw new Error('Product not found');
     }
+    console.log(product)
     product.nameProduct = updateProductDto.nameProduct;
     product.description = updateProductDto.description;
     product.categoryId = updateProductDto.categoryId;
@@ -201,7 +257,7 @@ export class ProductService {
     product.image = updateProductDto.image;
     product.coupon = updateProductDto.coupon;
     product.sku = this.generateSkuFromName(updateProductDto.nameProduct);
-
+    console.log(updateProductDto);
     await this.productRespository.save(product);
     return product;
   }

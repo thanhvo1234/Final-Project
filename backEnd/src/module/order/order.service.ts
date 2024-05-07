@@ -146,13 +146,11 @@ export class OrderService {
         '&requestType=' +
         requestType;
 
-      // Signature
       const signature = crypto
         .createHmac('sha256', secretkey)
         .update(rawSignature)
         .digest('hex');
 
-      // JSON object to send to MoMo endpoint
       const requestBody = JSON.stringify({
         partnerCode: partnerCode,
         accessKey: accessKey,
@@ -168,7 +166,6 @@ export class OrderService {
         lang: 'en',
       });
 
-      // Create the HTTPS options
       const options = {
         hostname: 'test-payment.momo.vn',
         port: 443,
@@ -180,7 +177,6 @@ export class OrderService {
         },
       };
 
-      // Send the request and get the response
       const req = https.request(options, (res) => {
         let payUrl = '';
         res.setEncoding('utf8');
@@ -202,29 +198,22 @@ export class OrderService {
     });
   }
 
-  async updateOrder(
-    id: string,
-    updateOrderDto: UpdateOrderDto,
-  ): Promise<Order> {
-    let order;
+  async updateOrder(id: string, updateOrderDto: UpdateOrderDto): Promise<Order> {
+    let order = await this.orderRepository.findOneBy({ id });
+    if (!order) {
+      throw new HttpException('Order not found', HttpStatus.NOT_FOUND);
+    }
+
+    order.isPaid = updateOrderDto.isPaid;
+    order.paidAt = updateOrderDto.paidAt;
+    order.isDelivery = updateOrderDto.isDelivery;
+    order.deliveryAt = updateOrderDto.deliveryAt;
+
     try {
-      order = await this.orderRepository.findOneBy({ id });
-      if (!order) {
-        throw new Error('Order not found');
-      }
-
-      order.isPaid = updateOrderDto.isPaid;
-      order.paidAt = updateOrderDto.paidAt;
-      order.isDelivery = updateOrderDto.isDelivery;
-      order.deliveryAt = updateOrderDto.deliveryAt;
-
       await this.entityManager.save(order);
     } catch (error) {
       console.error('Error updating order:', error);
-      throw new HttpException(
-        'Failed to update order: ' + error.message,
-        HttpStatus.INTERNAL_SERVER_ERROR,
-      );
+      throw new HttpException('Failed to update order', HttpStatus.INTERNAL_SERVER_ERROR);
     }
     return order;
   }

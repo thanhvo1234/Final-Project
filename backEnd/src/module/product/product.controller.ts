@@ -38,6 +38,7 @@ export class ProductController {
       return { error: error.message };
     }
   }
+  
   @Get('sku/:sku')
   async getBySku(@Param('sku') sku: string) {
     try {

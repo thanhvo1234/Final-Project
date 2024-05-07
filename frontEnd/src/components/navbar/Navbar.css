@@ -1,8 +1,7 @@
 .navbar {
     display: flex;
-    justify-content: space-around;
-    margin-left: -100px;
-    margin-right: -200px;
+    justify-content: space-between;
+    margin-left: 200px;
     padding: 10px;
     box-shadow: 0 1px 3px -2px black;
 }

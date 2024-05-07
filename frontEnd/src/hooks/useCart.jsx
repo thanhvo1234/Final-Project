@@ -5,20 +5,22 @@ import { openNotificationWithIcon } from "../components/notification/Notificatio
 
 
 export const useAddToCart = () => {
-  const queryClient = useQueryClient();
-  return useMutation({
-      mutationKey: ['add-to-cart'],
-      mutationFn: (newCart) => addToCartAPI(newCart.cartId, { productId: newCart.productId }),
-      onSuccess: () => {
-          queryClient.invalidateQueries([QUERY_KEY.CART]);
-          openNotificationWithIcon("success", "Product added to cart successfully.");
-      },
-      onError: (error) => {
-          console.error('Error adding product to cart:', error);
-          openNotificationWithIcon("error", "Failed to add product to cart.");
-      }
-  });
+    const queryClient = useQueryClient();
+    return useMutation({
+        mutationKey: ['add-to-cart'],
+        mutationFn: (newCart) => addToCartAPI(newCart.cartId, { productId: newCart.productId }),
+        onSuccess: () => {
+            queryClient.invalidateQueries([QUERY_KEY.CART]);
+            openNotificationWithIcon("success", "Product added to cart successfully.");
+        },
+        onError: (error) => {
+            const message = error.response?.data?.message || "Failed to add product to cart.";
+            console.error('Error adding product to cart:', error);
+            openNotificationWithIcon("error", message);
+        }
+    });
 };
+
 
 export const useGetOneCart = (id) => {
   return useQuery({
@@ -37,15 +39,13 @@ export const useGetCartData = (id) => {
     queryKey: [QUERY_KEY.CART, id],
     queryFn: async () => {
       const response = await getDetailCartAPI(id);
-      return response.data; // Adjust according to the actual structure of the response
+      return response.data;
     },
-    staleTime: 5 * 60 * 1000, // Data is fresh for 5 minutes
-    cacheTime: 30 * 60 * 1000, // Data stays in cache for 30 minutes
+    staleTime: 5 * 60 * 1000,
+    cacheTime: 30 * 60 * 1000,
     onError: (error) => {
-      // Optionally handle errors, e.g., logging or displaying notifications
       console.error('Error fetching cart data:', error);
     },
-    // Use this to show global or contextual loading indicators
     onLoadingSlow: () => {
       console.log('Fetching cart data is taking longer than expected...');
     },

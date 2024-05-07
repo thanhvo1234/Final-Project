@@ -42,7 +42,7 @@ const ProductDisplay = ({ product }) => {
           {product.description}
         </div>
         <button onClick={handleAddToCart} disabled={addToCartMutation.isLoading}>ADD TO CART</button>
-        {addToCartMutation.isError && <p>Error adding product to cart.</p>}
+        {addToCartMutation.isError && <p>{addToCartMutation.error.response?.data?.message || "Error adding product to cart."}</p>}
         <p className='productdisplay-right-category'><span>Category :</span>{product.category.nameCategory}</p>
         <p className='productdisplay-right-category'><span>Brand :</span>{product.brand.nameBrand}</p>
       </div>

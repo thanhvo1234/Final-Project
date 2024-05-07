@@ -79,7 +79,7 @@
     color: white;
     border: none;
     border-radius: 3px;
-    font-size: 18px; /* Kích thước chữ cho + và - */
+    font-size: 18px; 
     cursor: pointer;
 }
 .buttonRemoveItem{
@@ -96,11 +96,11 @@
 }
 
 .quantity-controls span {
-    width: 40px; /* Đặt chiều rộng cố định cho số lượng */
-    text-align: center; /* Căn giữa số lượng */
-    line-height: 30px; /* Chiều cao dòng cho khớp với nút */
+    width: 40px; 
+    text-align: center; 
+    line-height: 30px; 
     background-color: #fff;
-    border: 1px solid #ddd; /* Đường viền cho số lượng */
+    border: 1px solid #ddd; 
 }
 
 .cartitems-promocode{

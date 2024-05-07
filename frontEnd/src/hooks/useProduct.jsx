@@ -3,20 +3,37 @@ import { QUERY_KEY } from "../constants/querryKey.js";
 import { getProductAPI, createProductAPI, editProductAPI, deleteProductAPI, getDetailProductAPI, getProductDetailApiBySku } from "../api/apiUrl.js";
 import { openNotificationWithIcon } from "../components/notification/Notification";
 
-export const useGetProduct = (params) =>
-  useQuery({
+export const useGetProduct = (params) => {
+  // Function to remove empty parameters
+  const cleanParams = (params) => {
+    const cleanParams = {};
+    Object.keys(params).forEach(key => {
+      if (params[key] !== '' && params[key] !== undefined) {
+        cleanParams[key] = params[key];
+      }
+    });
+    return cleanParams;
+  };
+
+  return useQuery({
     queryKey: [
       QUERY_KEY.PRODUCT,
       params.page,
       params.take,
       params.searchByName,
-      params.searchByEmail,
+      params.categoryId,
+      params.minPrice,
+      params.maxPrice,
+      params.sortBy
     ],
     queryFn: async () => {
-      const { data } = await getProductAPI(params);
+      const cleanedParams = cleanParams(params); // Clean parameters before sending
+      const { data } = await getProductAPI(cleanedParams);
       return data;
     },
+    keepPreviousData: true, // optional: keep previous data while new data is loading
   });
+};
 
   export const useGetProducts = (params) =>
   useQuery({

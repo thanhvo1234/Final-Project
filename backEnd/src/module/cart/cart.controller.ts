@@ -36,18 +36,16 @@ import {
       }
     }
     @Post(':id/add')
-    async addToCart(@Param('id') id: string, @Body() addToCartDto: AddToCartDto) {
-      try {
+async addToCart(@Param('id') cartId: string, @Body() addToCartDto: AddToCartDto) {
+    try {
         const { productId } = addToCartDto;
-        const cartItem = await this.cartService.addProductToCart(id, productId);
-        return {
-          data: cartItem,
-          message: 'Thêm sản phẩm vào giỏ hàng thành công',
-        };
-      } catch (error) {
-        return { error: error.message };
-      }
+        const cartItem = await this.cartService.addProductToCart(cartId, productId);
+        return { data: cartItem, message: 'Product successfully added to cart.' };
+    } catch (error) {
+        throw new HttpException(error.response || 'An unknown error occurred', error.status || HttpStatus.INTERNAL_SERVER_ERROR);
     }
+}
+
   
     @Post(':cartId/increase/:productId')
     async increaseProductQuantity(

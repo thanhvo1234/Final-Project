@@ -21,7 +21,10 @@ import { useNavigate, useParams } from "react-router-dom";
 import "./EditProduct.css";
 import { edit } from "@cloudinary/url-gen/actions/animated";
 import { getBrandAPI, getCategoryAPI } from "../../../api/apiUrl";
-import { useEditProductData, useGetOneProduct } from "../../../hooks/useProduct";
+import {
+  useEditProductData,
+  useGetOneProduct,
+} from "../../../hooks/useProduct";
 import DeleteProduct from "./DeleteProduct";
 
 const { TextArea } = Input;
@@ -62,7 +65,6 @@ const EditProduct = () => {
       });
   }, []);
 
-  
   const [imageUrl, setImageUrl] = useState("");
   const [newImage, setNewImage] = useState(null);
   const [loadingAvatar, setLoadingAvatar] = useState(false);
@@ -76,8 +78,8 @@ const EditProduct = () => {
     quantity: product?.data.quantity ?? "",
     nameProduct: product?.data.nameProduct ?? "",
     onSale: product?.data.onSale ?? "",
-    category: product?.data.categoryId ?? "",
-    brand: product?.data.brandId ?? "",
+    categoryId: product?.data.categoryId ?? "",
+    brandId: product?.data.brandId ?? "",
     coupon: product?.data.coupon ?? "",
   };
 
@@ -87,14 +89,14 @@ const EditProduct = () => {
     if (imageUrl) {
       values.image = imageUrl;
     }
-console.log(values,"aaaa");
+    console.log(values, "aaaa");
     try {
       await ProductUpdateMutation.mutateAsync(values);
     } catch (error) {
       console.error("Error updating product data:", error);
       message.error("Failed to update product details.");
     }
-};
+  };
   const handleCloseDeleteModal = () => {
     setIsDeleteModalOpen(false);
   };
@@ -109,11 +111,11 @@ console.log(values,"aaaa");
         try {
           const res = await axios.post(
             "https://api.cloudinary.com/v1_1/dshdorhq9/image/upload",
-            formData,
+            formData
           );
           setImageUrl(res.data.secure_url);
           AntdMessage.success(
-            "Avatar uploaded successfully, Click change to apply ",
+            "Avatar uploaded successfully, Click change to apply "
           );
         } finally {
           setLoadingAvatar(false);
@@ -128,7 +130,7 @@ console.log(values,"aaaa");
       try {
         const res = await axios.post(
           "https://api.cloudinary.com/v1_1/dvm8fnczy/image/upload",
-          formData,
+          formData
         );
 
         setImageUrl(res.data.secure_url);
@@ -137,7 +139,6 @@ console.log(values,"aaaa");
       }
     }
   };
-
 
   return (
     <>
@@ -219,9 +220,7 @@ console.log(values,"aaaa");
                     }}
                     onClick={() => fileInputRef.current.click()}
                   >
-                    <Translation>
-                      {(t) => t("PRODUCT.CHANGEIMAGE")}
-                    </Translation>
+                    <Translation>{(t) => t("PRODUCT.CHANGEIMAGE")}</Translation>
                   </Button>
                 </Col>
               </Row>
@@ -231,16 +230,14 @@ console.log(values,"aaaa");
                 <Col span={12}>
                   <Form.Item
                     name="sku"
-                    label={
-                      <Translation>{(t) => t("PRODUCT.SKU")}</Translation>
-                    }
+                    label={<Translation>{(t) => t("PRODUCT.SKU")}</Translation>}
                   >
                     <Input disabled />
                   </Form.Item>
                 </Col>
                 <Col span={12}>
                   <Form.Item
-                    name="category"
+                    name="categoryId"
                     label={
                       <Translation>{(t) => t("PRODUCT.CATEGORY")}</Translation>
                     }
@@ -266,7 +263,7 @@ console.log(values,"aaaa");
                 </Col>
                 <Col span={12}>
                   <Form.Item
-                    name="brand"
+                    name="brandId"
                     label={
                       <Translation>{(t) => t("PRODUCT.BRAND")}</Translation>
                     }
@@ -304,9 +301,7 @@ console.log(values,"aaaa");
                   <Form.Item
                     name="onSale"
                     label={
-                      <Translation>
-                        {(t) => t("PRODUCT.ONSALE")}
-                      </Translation>
+                      <Translation>{(t) => t("PRODUCT.ONSALE")}</Translation>
                     }
                   >
                     <Radio.Group>
@@ -334,10 +329,7 @@ console.log(values,"aaaa");
                       </Translation>
                     }
                   >
-                    <TextArea
-                      rows={6}
-                      placeholder={t("PRODUCT.DESCRIPTION")}
-                    />
+                    <TextArea rows={6} placeholder={t("PRODUCT.DESCRIPTION")} />
                   </Form.Item>
                 </Col>
               </Row>

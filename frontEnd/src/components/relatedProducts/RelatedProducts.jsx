@@ -1,21 +1,27 @@
-import React from 'react'
-import "./RelatedProducts.css"
-import data_product from "../../assets/data"
-import Item from "../product/Product"
+/* eslint-disable no-unused-vars */
+import React from 'react';
+import "./RelatedProduct.css";
+import { useGetProducts } from '../../hooks/useProduct';
+import CardProduct from '../product/Product';
 
-const RelatedProducts = () => {
-  return (
-    <div className='relatedproducts'>
-        <h1>Related Products</h1>
-        <hr />
-        <div className="relatedproducts-item">
-            {data_product.map((product,i)=>{
-                return<Item key={i} id={product.id} name={product.name} image={product.image} new_price={product.new_price} old_price={product.old_price}/>
-            })}
+const RelatedProduct = () => {
+    const { data: popular, isLoading, error } = useGetProducts();
+    if (isLoading) return <p>Loading...</p>;
+    if (error) return <p>Error loading products!</p>;
+    return (
+        <div className='popular'>
+            <h1>POPULAR IN WOMEN</h1>
+            <hr />
+            <div className="popular-product">
+                {popular.data.data.slice(0, 4).map((product) => (
+                    <CardProduct
+                        key={product.id}
+                        data={product}
+                    />
+                ))}
+            </div>
         </div>
-      
-    </div>
-  )
-}
+    );
+};
 
-export default RelatedProducts
+export default RelatedProduct;

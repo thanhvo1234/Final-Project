@@ -1,42 +1,103 @@
-.search-screen {
-    display: flex;
+.search-page-container {
+  display: flex;
+  padding: 20px;
+}
+
+.filters {
+  flex: 1;
+  padding: 10px;
+  max-width: 300px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+.category-filters,
+.price-filters,
+.sort-filters {
+  display: flex;
+  flex-direction: column;
+  gap: 20px; /* Spacing between elements */
+}
+.category-filters div:not(:last-child),
+.sort-filters div:not(:last-child),
+.price-filters div:not(:last-child) {
+  margin-bottom: 20px; /* Adjust the spacing as needed */
+}
+.category-filters > p,
+.sort-filters > p,
+.price-filters > p {
+  font-size: 18px;
+  font-weight: 600;
+  margin-bottom: 10px;
+}
+
+.category-filters input[type="radio"],
+.sort-filters input[type="radio"],
+.price-filters input[type="radio"] {
+  margin-bottom: 5px; /* Smaller margin for inputs if needed */
+}
+
+.category-filters label,
+.sort-filters label,
+.price-filters label {
+  margin-left: 8px; /* Space after radio button */
+}
+.clear-filters-button {
+  background-color: #f44336; /* Red color for clear action */
+  color: white;
+  border: none;
+  padding: 8px 16px;
+  font-size: 16px;
+  cursor: pointer;
+  border-radius: 5px; /* Rounded corners for the button */
+  margin-top: 20px; /* Space from the last filter */
+  transition: background-color 0.3s; /* Smooth transition for hover effect */
+}
+
+.clear-filters-button:hover {
+  background-color: #d32f2f; /* Darker shade of red on hover */
+}
+
+.clear-filters-button:active {
+  background-color: #c62828; /* Even darker shade when clicked */
+}
+
+.products-list {
+  flex: 3;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 30px;
+  margin-left: 80px;
+}
+
+.search-input,
+select {
+  width: 100%;
+  padding: 8px;
+  margin-bottom: 20px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+}
+
+input[type="radio"] {
+  margin-right: 10px;
+}
+
+label {
+  margin-right: 20px; /* Space between options */
+}
+
+@media (max-width: 768px) {
+  .search-page-container {
     flex-direction: column;
-    background-color: var(--color-light);
   }
-  
+
   .filters {
-    display: flex;
-    flex-direction: row;
-    justify-content: space-between;
-    padding: 30px;
-    background-color: var(--color-light);
+    max-width: 100%;
+    order: 2; /* Filters go below products on small screens */
   }
-  
-  .search-input {
-    padding: 10px;
-    margin-right: 10px;
-    border-radius: 4px;
-    width: 100%;
-  }
-  
-  .search-button {
-    padding: 10px 20px;
-    color: white;
-    background-color: rgb(53, 53, 54);
-    border: 1px solid black;
-    border-radius: 4px;
-    cursor: pointer;
-    transition: background-color 0.3s ease;
-  }
-  
-  .search-button:hover {
-    background-color: darken(var(--color-accent), 10%);
-  }
-  
+
   .products-list {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-    gap: 90px;
-    padding: 50px;
+    order: 1;
   }
-  
+}

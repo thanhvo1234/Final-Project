@@ -1,5 +1,5 @@
 import { Type } from 'class-transformer';
-import { IsEnum, IsInt, IsOptional, IsString, Max, Min } from 'class-validator';
+import { IsEnum, IsInt, IsOptional, IsString, Max, Min, IsNumber } from 'class-validator';
 import { Order } from '../constants/enum';
 
 export class PageOptionsDto {
@@ -12,12 +12,28 @@ export class PageOptionsDto {
   @IsString()
   searchByEmail?: string = '';
 
+  @IsString()
+  @IsOptional()
+  categoryId?: string = '';
+
+  @IsNumber()
+  @IsOptional()
+  minPrice?: number;
+
+  @IsNumber()
+  @IsOptional()
+  maxPrice?: number;
+
   @IsEnum(Order)
   @IsOptional()
   order?: Order = Order.DESC;
 
   orderBy?: string = 'id';
 
+  @IsOptional()
+  @IsEnum(['price_asc', 'price_desc'], { each: true })
+  sortBy?: string;
+  
   @Type(() => Number)
   @IsInt()
   @Min(1)

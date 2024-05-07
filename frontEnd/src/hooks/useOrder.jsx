@@ -78,7 +78,7 @@ export const useGetOneOrder = (id) =>
       mutationFn: editOrderDetails,
       onSuccess: () => {
         queryClient.invalidateQueries(QUERY_KEY.ORDER);
-        openNotificationWithIcon("success", "Edit Category Details Successfully");
+        openNotificationWithIcon("success", "Update Order Successfully");
       },
       onError: (error) => {
         console.error("Error updating product:", error);
